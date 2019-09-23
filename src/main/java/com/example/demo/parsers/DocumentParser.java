@@ -1,33 +1,33 @@
 package com.example.demo.parsers;
 
+import com.example.demo.utils.StaxReader;
+import com.example.demo.utils.StaxWriter;
 import org.springframework.stereotype.Component;
-
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
-import java.io.StringWriter;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Component
 public class DocumentParser {
 
-    private static final XMLInputFactory FACTORY = XMLInputFactory.newInstance();
+    public void cleanProcessingInstructions(String filename, String fileToWrite)
+            throws XMLStreamException, IOException {
+        Path pathToFile = Paths.get("src", "main", "resources", "xml", filename);
 
-    public String cleanProcessingInstructions(String filename) throws XMLStreamException {
+        StaxReader staxReader = new StaxReader(pathToFile);
+        StaxWriter staxWriter = new StaxWriter(fileToWrite);
 
-        XMLEventReader xmlEventReader = FACTORY.createXMLEventReader(
-                this.getClass().getClassLoader().getResourceAsStream("xml/" + filename));
-
-        StringWriter buf = new StringWriter(1024);
-        while (xmlEventReader.hasNext()) {
-            XMLEvent event = xmlEventReader.nextEvent();
-            if (event.getEventType() == XMLEvent.PROCESSING_INSTRUCTION){
-                continue;
+        try (staxReader; staxWriter) {
+            while (staxReader.getReader().hasNext()) {
+                XMLEvent event = staxReader.getReader().nextEvent();
+                if (event.getEventType() == XMLEvent.PROCESSING_INSTRUCTION) {
+                    continue;
+                }
+                staxWriter.getWriter().add(event);
             }
-            event.writeAsEncodedUnicode(buf);
         }
-        // reader.close()
-        return buf.toString();
     }
 }
 

@@ -7,8 +7,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -26,7 +28,8 @@ public class NoticeParserTest {
     @Test
     public void shouldCorrectlyRetrieveMetadataFromXml()
             throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
-        NoticeParser noticeParser = new NoticeParser();
+        NoticeParser noticeParser = new NoticeParser(DocumentBuilderFactory.newInstance(),
+                XPathFactory.newInstance());
 
         Metadata metadata = noticeParser.parseNotice("notice.xml");
         assertThat(metadata.getCreationDate(),
