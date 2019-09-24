@@ -4,8 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.transform.TransformerFactory;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -14,13 +13,6 @@ public class DemoApplication {
         SpringApplication.run(DemoApplication.class, args);
     }
 
-    @Bean
-    public DocumentBuilderFactory documentBuilderFactory() {
-        return DocumentBuilderFactory.newInstance();
-    }
-
 	@Bean
-	public XPathFactory xPathFactory() {
-		return XPathFactory.newInstance();
-	}
+    public TransformerFactory transformerFactory() {return  TransformerFactory.newInstance();}
 }
